@@ -35,6 +35,7 @@ export function useSelection (props, emit, accessors, allItems) {
   }
 
   const NOT_FOUND = {}
+  const isStringOrNumber = value => typeof value === 'string' || typeof value === 'number'
 
   function findItemByValue (value) {
     // v-model can hold an item itself instead of its value
@@ -47,6 +48,19 @@ export function useSelection (props, emit, accessors, allItems) {
       const found = pool.find(item => getItemKey(item) === key)
 
       if (found !== undefined) return found
+    }
+
+    // a value from a server or from a form is often a string ("5") while the item has a number (5)
+    if (isStringOrNumber(key)) {
+      for (const pool of pools) {
+        const found = pool.find(item => {
+          const itemKey = getItemKey(item)
+
+          return isStringOrNumber(itemKey) && String(itemKey) === String(key)
+        })
+
+        if (found !== undefined) return found
+      }
     }
 
     // an unknown object is shown as it is; an unknown primitive only when new values are allowed

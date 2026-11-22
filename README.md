@@ -87,7 +87,8 @@ and props in kebab-case (`item-text`).
 
 ## Examples
 
-Objects as items. Without `item-value` the whole object is the value.
+Objects as items. Without `item-value` the whole object is the value. A value of `v-model` given as a
+numeric string (`"5"`) also finds the item with the number `5`.
 
 ```vue
 <Vue3CoolSelect v-model="countryCode" :items="countries" item-text="name" item-value="code" />

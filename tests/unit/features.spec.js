@@ -82,6 +82,19 @@ describe('keeping the selection', () => {
     expect(input(wrapper).element.value).toBe('Late')
   })
 
+  it('finds the item when the value is a numeric string and the item has a number', async () => {
+    const wrapper = await mountSelect({
+      props: { items: users, modelValue: '3', itemValue: 'id', itemText: 'name' }
+    })
+
+    expect(input(wrapper).element.value).toBe('Clara')
+
+    await wrapper.setProps({ modelValue: ['1', 3], multiple: true })
+
+    expect(chips(wrapper)).toHaveLength(2)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
   it('keeps the selection while typing with clear-on-search="false"', async () => {
     const wrapper = await mountSelect({
       props: { items: languages, modelValue: 'JS', clearOnSearch: false }

@@ -11,6 +11,7 @@ New:
   the first page loads on open, next pages on scroll, outdated requests are aborted.
 - `selected-item` shows a value which is not in `items`; `clear-on-search`, `close-on-select`.
 - `name`, `id` and `required` for HTML forms.
+- A value given as a numeric string finds the item with the same number.
 - `menu-to` renders the menu in another element, so modals and `overflow: hidden` cannot clip it.
 - New slots `chip`, `group`, `create`, `loading`, `loading-more`, `clear-icon`; new events `remove`,
   `clear`, `create`, `open`, `close`, `load-more`, `search-error`.
