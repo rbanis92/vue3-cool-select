@@ -191,6 +191,8 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
+  shallowRef,
+  toRaw,
   watch
 } from 'vue'
 import { isObject, getOffsetSum, outOfViewportGetFreePosition, scrollIfNeeded } from './helpers'
@@ -227,8 +229,9 @@ export default defineComponent({
     const wishShowMenu = ref(false)
     const arrowsIndex = ref(null)
     const focused = ref(false)
-    const selectedItem = ref(null)
-    const selectedItemByArrows = ref(null)
+    // shallow: items must keep their identity (they are compared with ===)
+    const selectedItem = shallowRef(null)
+    const selectedItemByArrows = shallowRef(null)
     const searchData = ref(props.searchText || '')
     const scrollItemsLimitCurrent = ref(props.scrollItemsLimit)
     const menuCurrentPosition = ref(props.menuDefaultPosition)
@@ -398,6 +401,9 @@ export default defineComponent({
     function setFocused (byInput = false) {
       if (focused.value || props.disabled || props.readonly) return
 
+      // set first: focusing the input below fires its focus event, which calls this function again
+      focused.value = true
+
       if (!props.disableSearch && !byInput) setInputFocused()
 
       if (typeof window !== 'undefined' && window.scrollTo && props.allowMobileScroll && isMobile.value) {
@@ -411,7 +417,6 @@ export default defineComponent({
 
       if (props.selectTextOnFocus) setInputSelected()
 
-      focused.value = true
       showMenu()
       emit('focus')
     }
@@ -437,7 +442,8 @@ export default defineComponent({
       const value = isObject(props.modelValue)
         ? getItemValue(props.modelValue)
         : props.modelValue
-      const found = itemsComputed.value.find(i => getItemValue(i) === value)
+      // toRaw: the same object can come as a reactive proxy from v-model and as a raw object from items
+      const found = itemsComputed.value.find(i => toRaw(getItemValue(i)) === toRaw(value))
 
       selectedItem.value = found === undefined ? null : found
     }
@@ -617,7 +623,7 @@ export default defineComponent({
       const value = currentItemValue.value
 
       // already in sync with v-model (null and undefined both mean "nothing selected")
-      if (value === props.modelValue || (value == null && props.modelValue == null)) return
+      if (toRaw(value) === toRaw(props.modelValue) || (value == null && props.modelValue == null)) return
 
       emit('update:modelValue', value)
     })

@@ -167,7 +167,8 @@ inputPaddingLeft = 15px
 .IZ-select__item
   cursor: pointer
   padding: 18px inputPaddingLeft
-  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1)
+  // not "all": inherited visibility must switch at once, so items are clickable as soon as the menu opens
+  transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1)
 
   &:hover
     background-color: #f2f2f2

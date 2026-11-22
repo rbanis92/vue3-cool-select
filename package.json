@@ -18,6 +18,14 @@
   "contributors": [
     "Ilya Zelenko (author of the original vue-cool-select)"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbanis92/vue3-cool-select.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rbanis92/vue3-cool-select/issues"
+  },
+  "homepage": "https://github.com/rbanis92/vue3-cool-select#readme",
   "main": "dist/vue3-cool-select.umd.js",
   "module": "dist/vue3-cool-select.mjs",
   "unpkg": "dist/vue3-cool-select.umd.js",
