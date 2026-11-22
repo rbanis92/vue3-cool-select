@@ -1,4 +1,13 @@
+// Layout and states shared by all themes.
+// A theme only sets the --iz-* custom properties (see themes/bootstrap.styl) and its own extras.
+// The properties are set on the select and on the menu, because the menu can be rendered
+// outside of the select ("menu-to" prop).
+
 .IZ-select
+  position: relative
+  outline: none
+  text-align: left
+
   *
     box-sizing: border-box
 
@@ -7,11 +16,294 @@
   align-items: center
   height: 100%
 
+// the box: border, background, focus ring
 .IZ-select__input
-  height: 100%;
+  display: flex
+  flex: 1 1 auto
+  flex-wrap: wrap
+  align-items: center
+  width: 100%
+  min-width: 0
+  min-height: var(--iz-height)
+  font-family: var(--iz-font-family)
+  font-size: var(--iz-font-size)
+  font-weight: var(--iz-font-weight)
+  line-height: var(--iz-line-height)
+  color: var(--iz-color)
+  background-color: var(--iz-bg)
+  background-clip: padding-box
+  border: var(--iz-border-width) solid var(--iz-border-color)
+  border-radius: var(--iz-radius)
+  box-shadow: var(--iz-shadow)
+  transition: var(--iz-transition)
 
-  input
-    height: 100%;
+  // the text field
+  input:not([type="hidden"])
+    flex: 1 1 0
+    width: 100%
+    min-width: 0
+    max-width: 100%
+    height: calc(var(--iz-height) - 2 * var(--iz-border-width))
+    margin: 0
+    padding: 0 var(--iz-padding-x)
+    font: inherit
+    letter-spacing: inherit
+    color: inherit
+    text-overflow: ellipsis
+    background-color: transparent
+    border: 0
+    border-radius: 0
+    box-shadow: none
+    appearance: none
+
+    &:focus
+      outline: none
+
+    &::placeholder
+      color: var(--iz-placeholder-color)
+      opacity: 1
+
+    &:disabled
+      pointer-events: none
+
+  &.IZ-select__input--focused
+    border-color: var(--iz-focus-border-color)
+    box-shadow: var(--iz-focus-shadow)
+
+  &.IZ-select__input--successful
+    border-color: var(--iz-success-color)
+
+    &.IZ-select__input--focused
+      box-shadow: var(--iz-success-focus-shadow)
+
+  &.IZ-select__input--has-error
+    border-color: var(--iz-error-color)
+    caret-color: var(--iz-error-color)
+
+    &.IZ-select__input--focused
+      box-shadow: var(--iz-error-focus-shadow)
+
+  &.IZ-select__input--selection-slot
+    padding-left: var(--iz-padding-x)
+
+    input:not([type="hidden"])
+      padding-left: .5em
+
+  &.IZ-select__input--disabled
+    pointer-events: none
+    color: var(--iz-disabled-color)
+    background-color: var(--iz-disabled-bg)
+    box-shadow: var(--iz-disabled-shadow)
+
+    input:not([type="hidden"])::placeholder
+      color: var(--iz-disabled-placeholder-color)
+
+  &.IZ-select__input--readonly
+    background-color: var(--iz-readonly-bg)
+
+// clear button and loading indicator at the end of the box
+.IZ-select__clear,
+.IZ-select__chip-remove
+  flex: none
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  margin: 0
+  padding: 0
+  font-family: Arial, sans-serif
+  font-weight: 400
+  line-height: 1
+  color: var(--iz-icon-color)
+  background: transparent
+  border: 0
+  border-radius: 50%
+  cursor: pointer
+  appearance: none
+  transition: color .15s ease-in-out, background-color .15s ease-in-out
+
+  &:hover
+    color: var(--iz-icon-hover-color)
+
+  &:focus
+    outline: none
+
+.IZ-select__clear
+  // must not be higher than a chip, or it would stretch the box
+  width: 1.2em
+  height: 1.2em
+  margin-right: calc(var(--iz-padding-x) / 2)
+  font-size: 1.25em
+
+  &:hover
+    background-color: var(--iz-icon-hover-bg)
+
+.IZ-select__spinner
+  flex: none
+  width: 1em
+  height: 1em
+  margin-right: calc(var(--iz-padding-x) / 2)
+  border: .15em solid var(--iz-spinner-track-color)
+  border-top-color: var(--iz-spinner-color)
+  border-radius: 50%
+  animation: IZ-select-spin .7s linear infinite
+
+@keyframes IZ-select-spin
+  to
+    transform: rotate(360deg)
+
+// multiple selection: chips and the text field share the box and wrap to more lines.
+// One line is exactly as high as the box of a single select.
+.IZ-select--multiple
+  .IZ-select__input
+    padding: calc(var(--iz-chip-gap) / 2)
+
+    input:not([type="hidden"])
+      flex: 1 1 4em
+      width: auto
+      min-width: 4em
+      height: calc(var(--iz-height) - 2 * var(--iz-border-width) - 2 * var(--iz-chip-gap))
+      margin: calc(var(--iz-chip-gap) / 2) 0
+      // the text starts at the same place as in a single select
+      padding: 0 calc(var(--iz-padding-x) - var(--iz-chip-gap) / 2)
+
+  .IZ-select__clear,
+  .IZ-select__spinner
+    margin-right: calc(var(--iz-padding-x) / 2 - var(--iz-chip-gap) / 2)
+
+.IZ-select__chip
+  display: inline-flex
+  align-items: center
+  max-width: 100%
+  height: calc(var(--iz-height) - 2 * var(--iz-border-width) - 2 * var(--iz-chip-gap))
+  margin: calc(var(--iz-chip-gap) / 2)
+  padding: 0 var(--iz-chip-padding-x)
+  font-size: var(--iz-chip-font-size)
+  line-height: 1
+  color: var(--iz-chip-color)
+  white-space: nowrap
+  background-color: var(--iz-chip-bg)
+  border: var(--iz-chip-border)
+  border-radius: var(--iz-chip-radius)
+
+.IZ-select__chip-text
+  overflow: hidden
+  // not 1: descenders (g, p, y) would be cut by "overflow: hidden"
+  line-height: 1.5
+  text-overflow: ellipsis
+
+.IZ-select__chip-remove
+  width: 1.15em
+  height: 1.15em
+  margin-left: .3em
+  margin-right: calc(var(--iz-chip-padding-x) / -3)
+  font-size: 1.15em
+
+  &:hover
+    background-color: var(--iz-icon-hover-bg)
+
+// the menu
+.IZ-select__menu
+  position: absolute
+  z-index: var(--iz-menu-z-index)
+  margin: var(--iz-menu-offset) 0
+  opacity: 0
+  font-family: var(--iz-font-family)
+  font-size: var(--iz-font-size)
+  font-weight: var(--iz-font-weight)
+  line-height: var(--iz-line-height)
+  color: var(--iz-item-color)
+  text-align: left
+  background-color: var(--iz-menu-bg)
+  border: var(--iz-menu-border)
+  border-radius: var(--iz-menu-radius)
+  box-shadow: var(--iz-menu-shadow)
+  transition: opacity .1s
+
+  *
+    box-sizing: border-box
+
+  // without search the menu covers the input
+  &.IZ-select__menu--disable-search
+    margin: 0
+
+.IZ-select__menu-items
+  position: relative
+  overflow-x: hidden
+  overflow-y: auto
+  overscroll-behavior: contain
+  border-radius: inherit
+
+.IZ-select__menu-space
+  height: var(--iz-menu-padding)
+
+.IZ-select__item
+  position: relative
+  padding: var(--iz-item-padding-y) var(--iz-item-padding-x)
+  overflow-wrap: anywhere
+  cursor: pointer
+  // not "all": inherited visibility must switch at once, so items are clickable as soon as the menu opens
+  transition: background-color .15s ease-in-out, color .15s ease-in-out
+
+  &:hover
+    background-color: var(--iz-item-hover-bg)
+
+  &.IZ-select__item--child
+    padding-left: calc(var(--iz-item-padding-x) * 2)
+
+  &.IZ-select__item--selected
+    color: var(--iz-item-selected-color)
+    background-color: var(--iz-item-selected-bg)
+
+  // by arrows; stronger than hover and selected
+  &.IZ-select__item--highlighted
+    background-color: var(--iz-item-highlight-bg)
+
+  &.IZ-select__item--disabled
+    color: var(--iz-item-disabled-color)
+    background-color: transparent
+    cursor: default
+
+.IZ-select__create
+  color: var(--iz-item-selected-color)
+
+// multiple selection: a check mark on selected items
+.IZ-select__menu--multiple .IZ-select__item
+  padding-right: calc(var(--iz-item-padding-x) + 1.5em)
+
+  &.IZ-select__item--selected::after
+    content: ""
+    position: absolute
+    top: 50%
+    right: calc(var(--iz-item-padding-x) + .2em)
+    width: .4em
+    height: .75em
+    margin-top: -.5em
+    border: solid currentColor
+    border-width: 0 .14em .14em 0
+    transform: rotate(45deg)
+
+.IZ-select__group
+  padding: var(--iz-group-padding)
+  font-size: var(--iz-group-font-size)
+  font-weight: var(--iz-group-font-weight)
+  color: var(--iz-group-color)
+  overflow-wrap: anywhere
+  cursor: default
+
+.IZ-select__no-data,
+.IZ-select__loading
+  padding: var(--iz-item-padding-y) var(--iz-item-padding-x)
+  color: var(--iz-muted-color)
+  cursor: default
+
+.IZ-select__error
+  width: 100%
+  margin-top: var(--iz-error-margin)
+  padding: var(--iz-error-padding)
+  font-family: var(--iz-font-family)
+  font-size: var(--iz-error-font-size)
+  line-height: 1.5
+  color: var(--iz-error-color)
 
 .IZ-select-fade
   &-leave-active

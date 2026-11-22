@@ -182,6 +182,7 @@
           [`IZ-select__menu IZ-select__menu--at-${menuCurrentPosition}`]: true,
           'IZ-select__menu--disable-search': disableSearch,
           'IZ-select__menu--detached': !!menuTo,
+          'IZ-select__menu--multiple': multiple,
           ...(size === SIZES.DEFAULT
             ? null
             : ({ ['IZ-select__menu--' + size]: true })

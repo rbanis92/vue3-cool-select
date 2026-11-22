@@ -1,7 +1,7 @@
 {
   "name": "vue3-cool-select",
-  "version": "1.0.0",
-  "description": "Vue 3 select with autocomplete, slots and two themes (Bootstrap, Material Design). Vue 3 port of vue-cool-select.",
+  "version": "2.0.0",
+  "description": "Vue 3 select with autocomplete, multiple selection, tags, groups, remote search, slots and two themes (Bootstrap, Material Design).",
   "keywords": [
     "vue",
     "vue3",
@@ -11,7 +11,13 @@
     "combobox",
     "slots",
     "bootstrap",
-    "material design"
+    "material design",
+    "multiple",
+    "multiselect",
+    "tags",
+    "ajax",
+    "remote search",
+    "select2"
   ],
   "license": "MIT",
   "author": "Anisur Rahaman",
@@ -64,6 +70,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.11",
     "@vue/test-utils": "^2.6.0",
+    "bootstrap": "^4.6.2",
     "jsdom": "^31.0.1",
     "stylus": "^0.64.0",
     "vite": "^8.3.8",

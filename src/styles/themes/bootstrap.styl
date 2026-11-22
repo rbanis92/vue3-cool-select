@@ -1,182 +1,99 @@
+// Bootstrap theme. The box has the measures of Bootstrap 4 ".form-control" (also -sm and -lg,
+// .is-valid and .is-invalid), the menu follows ".dropdown-menu".
+// Every value can be changed by setting the custom property on .IZ-select and .IZ-select__menu.
 @import "../common/main.styl"
 
-inputRadius = .25rem
-menuRadius = inputRadius
-inputPaddingLeft = .75rem
-
-.IZ-select
-  position: relative
-  outline: none
-
-  .IZ-select__input
-    font-weight: 400
-    font-size: 1rem
-    line-height: 1.5
-
-    input
-      height: calc(1.5em + .75rem)
-      padding: .375rem inputPaddingLeft
-
-  &--sm
-    .IZ-select__input
-      border-radius: .2rem
-
-      input
-        height: calc(1.5em + .5rem)
-        padding: .25rem .5rem
-        font-size: .875rem
-        line-height: 1.5
-
-  &--lg
-    .IZ-select__input
-      border-radius: .3rem
-
-      input
-        height: calc(1.5em + 1rem)
-        padding: .5rem 1rem
-        font-size: 1.25rem
-        line-height: 1.5
-
-//.IZ-select *
-//  font-size: 16px
-//  font-weight: 400
-//  font-family: sans-serif
-
-.IZ-select__input
-  align-items: center
-  display: flex
-  flex: 1 1 auto
-  flex-wrap: wrap
-  width: 100%
-  color: #495057
-  background-color: #fff
-  background-clip: padding-box
-  border: 1px solid #ced4da
-  border-radius: inputRadius
-  transition: background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
-
-  &.IZ-select__input--has-menu
-    //border-bottom: 0
-    //border-bottom-left-radius: 0
-    //border-bottom-right-radius: 0
-
-  &.IZ-select__input--selection-slot
-    padding-left: inputPaddingLeft
-
-    input
-      padding-left: 10px
-
-  &.IZ-select__input--has-error
-    border: 1px solid #dc3545 !important
-    caret-color: #ff5252 !important
-
-    input
-      color: #ff5252 !important
-
-  &.IZ-select__input--successful
-    border: 1px solid #28a745 !important
-    caret-color: #28c346 !important
-
-  &.IZ-select__input--focused
-    border-color: #80bdff
-    outline: 0
-    box-shadow: 0 0 0 0.2rem rgba(128, 189, 255, 0.5)
-
-    &.IZ-select__input--has-error
-      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important
-
-    &.IZ-select__input--successful
-      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important
-
-  &.IZ-select__input--disabled
-    pointer-events: none
-    background-color: #e9ecef
-    opacity: 1
-
-    input
-      color: #6c737a !important
-
-    &::placeholder
-      color: #6c737a !important
-
-  input
-    font-size: 1rem
-    /* Loading indicator */
-    background-size: 25px 25px
-    background-position: right 10px center
-    background-repeat: no-repeat
-    color: #495057 !important
-    background-color: transparent
-    border-style: none
-    pointer-events: auto
-    flex: 1 1
-    margin-top: 0
-    min-width: 0
-    position: relative
-    line-height: 20px
-    //padding: 8px 0
-    max-width: 100%
-    width: 100%
-
-    &:focus
-      outline: none
-
-    &:disabled
-      pointer-events: none
-
+.IZ-select,
 .IZ-select__menu
-  opacity 0
-  transition: opacity 0.1s
-  position: absolute
-  z-index: 8
-  transform-origin: left top 0 
-  background-color: #fff
-  border: 1px solid #ced4da
-  // keep in sync with the // не забудь поменять для &.IZ-select__menu--disable-search (ниже) стили рамки.IZ-select__menu--disable-search border styles below
-  border-radius: menuRadius
-  box-shadow: 0 2px 11px -2px rgba(0, 0, 0, 0.19)
+  --iz-font-family: inherit
+  --iz-font-size: 1rem
+  --iz-font-weight: 400
+  --iz-line-height: 1.5
 
-  &--at-top
-    border-bottom: 0
-    border-bottom-left-radius: 0
-    border-bottom-right-radius: 0
+  // in rem (not em), so the value is the same wherever it is used: 1.5 * font-size + padding + border
+  --iz-height: calc(1.5rem + .75rem + 2px)
+  --iz-padding-x: .75rem
+  --iz-color: #495057
+  --iz-placeholder-color: #6c757d
+  --iz-muted-color: #6c757d
+  --iz-bg: #fff
+  --iz-border-width: 1px
+  --iz-border-color: #ced4da
+  --iz-radius: .25rem
+  --iz-shadow: none
+  --iz-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 
-    &.IZ-select__menu--disable-search
-      border-bottom: 1px
-      border-bottom-left-radius: menuRadius
-      border-bottom-right-radius: menuRadius
+  --iz-focus-border-color: #80bdff
+  --iz-focus-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
+  --iz-error-color: #dc3545
+  --iz-error-focus-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25)
+  --iz-error-font-size: .875em
+  --iz-error-margin: .25rem
+  --iz-error-padding: 0
+  --iz-success-color: #28a745
+  --iz-success-focus-shadow: 0 0 0 .2rem rgba(40, 167, 69, .25)
 
-  &--at-bottom
-    border-top: 0
-    border-top-left-radius: 0
-    border-top-right-radius: 0
+  --iz-disabled-bg: #e9ecef
+  --iz-disabled-color: #495057
+  --iz-disabled-placeholder-color: #6c757d
+  --iz-disabled-shadow: none
+  --iz-readonly-bg: #e9ecef
 
-    &.IZ-select__menu--disable-search
-      border-top: 1px
-      border-top-left-radius: menuRadius
-      border-top-right-radius: menuRadius
+  --iz-icon-color: #6c757d
+  --iz-icon-hover-color: #212529
+  --iz-icon-hover-bg: rgba(0, 0, 0, .08)
+  --iz-spinner-color: #007bff
+  --iz-spinner-track-color: rgba(0, 0, 0, .1)
 
-  .IZ-select__menu-items
-    overflow-y: auto
-    overflow-x: hidden
+  --iz-chip-gap: 6px
+  --iz-chip-padding-x: .5em
+  --iz-chip-font-size: .875em
+  --iz-chip-color: #495057
+  --iz-chip-bg: #e9ecef
+  --iz-chip-border: 1px solid #dee2e6
+  --iz-chip-radius: .2rem
 
-  .IZ-select__no-data
-    margin: 0 10px
+  --iz-menu-z-index: 1060
+  --iz-menu-offset: .125rem
+  --iz-menu-padding: .5rem
+  --iz-menu-bg: #fff
+  --iz-menu-border: 1px solid rgba(0, 0, 0, .15)
+  --iz-menu-radius: .25rem
+  --iz-menu-shadow: 0 .5rem 1rem rgba(0, 0, 0, .175)
 
-.IZ-select__item
-  cursor: pointer
-  padding: 10px 14px
-  // not "all": inherited visibility must switch at once, so items are clickable as soon as the menu opens
-  transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1)
+  --iz-item-padding-y: .375rem
+  --iz-item-padding-x: .75rem
+  --iz-item-color: #212529
+  --iz-item-hover-bg: #f8f9fa
+  --iz-item-highlight-bg: #e9ecef
+  --iz-item-selected-color: #007bff
+  --iz-item-selected-bg: rgba(0, 123, 255, .08)
+  --iz-item-disabled-color: #adb5bd
 
-  &:hover
-    background-color: #f2f2f2
+  --iz-group-padding: .5rem .75rem .25rem
+  --iz-group-font-size: .875em
+  --iz-group-font-weight: 400
+  --iz-group-color: #6c757d
 
-  &.IZ-select__item--selected
-    color: #1976d2 !important
-    //background-color: lightgrey
+.IZ-select--sm,
+.IZ-select__menu--sm
+  --iz-font-size: .875rem
+  --iz-height: calc(1.3125rem + .5rem + 2px)
+  --iz-padding-x: .5rem
+  --iz-radius: .2rem
+  --iz-chip-gap: 4px
+  --iz-item-padding-y: .25rem
+  --iz-item-padding-x: .5rem
+  --iz-group-padding: .375rem .5rem .125rem
+  --iz-menu-padding: .25rem
 
-.IZ-select__error
-  margin-top: .55rem
-  font-size: 85%
-  color: #dc3545
+.IZ-select--lg,
+.IZ-select__menu--lg
+  --iz-font-size: 1.25rem
+  --iz-height: calc(1.875rem + 1rem + 2px)
+  --iz-padding-x: 1rem
+  --iz-radius: .3rem
+  --iz-chip-gap: 8px
+  --iz-item-padding-y: .5rem
+  --iz-item-padding-x: 1rem
+  --iz-group-padding: .625rem 1rem .25rem
