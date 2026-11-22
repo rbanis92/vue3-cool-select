@@ -27,20 +27,30 @@ const lastEmitted = (wrapper, event) => {
   return calls[calls.length - 1][0]
 }
 
+// the menu is rendered when it is opened for the first time; tests look into it without opening
+async function mountSelect (options) {
+  const wrapper = mount(Vue3CoolSelect, options)
+
+  wrapper.vm.menuRendered = true
+  await nextTick()
+
+  return wrapper
+}
+
 async function search (wrapper, text) {
   input(wrapper).element.value = text
   await input(wrapper).trigger('input')
 }
 
 describe('exports and plugin', () => {
-  it('exports the component under all names', () => {
+  it('exports the component under all names', async () => {
     expect(Vue3CoolSelect.name).toBe('Vue3CoolSelect')
     expect(NamedExport).toBe(Vue3CoolSelect)
     expect(CoolSelect).toBe(Vue3CoolSelect)
     expect(typeof EventEmitter).toBe('function')
   })
 
-  it('installs the plugin', () => {
+  it('installs the plugin', async () => {
     const app = createApp({ render: () => null })
 
     app.use(CoolSelectPlugin, { text: { noData: 'Nothing' } })
@@ -50,8 +60,8 @@ describe('exports and plugin', () => {
     expect(app.component('CoolSelect')).toBe(Vue3CoolSelect)
   })
 
-  it('uses plugin options for the "no data" text', () => {
-    const wrapper = mount(Vue3CoolSelect, {
+  it('uses plugin options for the "no data" text', async () => {
+    const wrapper = await mountSelect({
       props: { items: [] },
       global: { plugins: [[CoolSelectPlugin, { text: { noData: 'Nothing' } }]] }
     })
@@ -59,31 +69,31 @@ describe('exports and plugin', () => {
     expect(wrapper.find('.IZ-select__no-data').text()).toBe('Nothing')
   })
 
-  it('works without the plugin', () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: [] } })
+  it('works without the plugin', async () => {
+    const wrapper = await mountSelect({ props: { items: [] } })
 
     expect(wrapper.find('.IZ-select__no-data').text()).toBe('No data available')
   })
 })
 
 describe('rendering', () => {
-  it('renders the component', () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+  it('renders the component', async () => {
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     expect(wrapper.find('.IZ-select').exists()).toBe(true)
     expect(input(wrapper).exists()).toBe(true)
-    expect(wrapper.findAll('.IZ-select__menu')).toHaveLength(2)
+    expect(wrapper.findAll('.IZ-select__menu')).toHaveLength(1)
     expect(bottomItems(wrapper).map(i => i.text())).toEqual(itemsDefault)
   })
 
-  it('accepts items as a JSON string', () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: JSON.stringify(itemsDefault) } })
+  it('accepts items as a JSON string', async () => {
+    const wrapper = await mountSelect({ props: { items: JSON.stringify(itemsDefault) } })
 
     expect(bottomItems(wrapper)).toHaveLength(itemsDefault.length)
   })
 
   it('renders placeholder, size, error and successful states', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: {
         items: itemsDefault,
         placeholder: 'Select',
@@ -105,7 +115,7 @@ describe('rendering', () => {
   })
 
   it('renders slots', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsCollection, modelValue: 22, ...collectionProps },
       slots: {
         item: ({ item }) => h('b', { class: 'custom-item' }, item.text + '!'),
@@ -130,8 +140,8 @@ describe('rendering', () => {
     }
   })
 
-  it('renders "no-data" and "error" slots', () => {
-    const wrapper = mount(Vue3CoolSelect, {
+  it('renders "no-data" and "error" slots', async () => {
+    const wrapper = await mountSelect({
       props: { items: [], errorMessage: 'Bad' },
       slots: {
         'no-data': () => 'Empty!',
@@ -146,7 +156,7 @@ describe('rendering', () => {
 
 describe('v-model', () => {
   it('shows the initial value without emitting', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, modelValue: 'PHP' }
     })
 
@@ -158,7 +168,7 @@ describe('v-model', () => {
   })
 
   it('emits nothing on mount when there is no value', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await nextTick()
 
@@ -166,7 +176,7 @@ describe('v-model', () => {
   })
 
   it('selects an item by click', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await wrapper.trigger('mousedown')
     expect(wrapper.vm.hasMenu).toBe(true)
@@ -181,7 +191,7 @@ describe('v-model', () => {
   })
 
   it('works with itemValue and itemText', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsCollection, modelValue: '333', ...collectionProps }
     })
 
@@ -196,7 +206,7 @@ describe('v-model', () => {
   })
 
   it('returns the whole object without itemValue', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsCollection, itemText: 'text' }
     })
 
@@ -206,8 +216,8 @@ describe('v-model', () => {
     expect(lastEmitted(wrapper, 'update:modelValue')).toBe(itemsCollection[1])
   })
 
-  it('accepts an object as value', () => {
-    const wrapper = mount(Vue3CoolSelect, {
+  it('accepts an object as value', async () => {
+    const wrapper = await mountSelect({
       props: { items: itemsCollection, modelValue: { val: 22, text: 'Text 2' }, ...collectionProps }
     })
 
@@ -215,7 +225,7 @@ describe('v-model', () => {
   })
 
   it('reacts to value changes from the parent', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, modelValue: 'JS' }
     })
 
@@ -231,7 +241,7 @@ describe('v-model', () => {
   })
 
   it('selects the item when items are loaded after the value', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: [], modelValue: 22, ...collectionProps }
     })
 
@@ -250,6 +260,7 @@ describe('v-model', () => {
       template: '<Vue3CoolSelect v-model="selected" :items="items" />'
     })
 
+    await wrapper.find('.IZ-select').trigger('mousedown')
     await wrapper.findAll('.IZ-select__menu--at-bottom .IZ-select__item')[3].trigger('click')
     await nextTick()
 
@@ -266,6 +277,7 @@ describe('v-model', () => {
       template: '<Vue3CoolSelect v-model="selected" :items="items" item-text="text" />'
     })
 
+    await wrapper.find('.IZ-select').trigger('mousedown')
     await wrapper.findAll('.IZ-select__menu--at-bottom .IZ-select__item')[1].trigger('click')
     await nextTick()
     await nextTick()
@@ -277,7 +289,7 @@ describe('v-model', () => {
 
 describe('search', () => {
   it('filters items and emits events', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, modelValue: 'JS' } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, modelValue: 'JS' } })
 
     await search(wrapper, 'p')
 
@@ -290,7 +302,7 @@ describe('search', () => {
   })
 
   it('shows "no data" when nothing is found', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await search(wrapper, 'zzz')
 
@@ -299,7 +311,7 @@ describe('search', () => {
   })
 
   it('does not filter with disableFilteringBySearch', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, disableFilteringBySearch: true }
     })
 
@@ -311,7 +323,7 @@ describe('search', () => {
 
   it('uses a custom filter', async () => {
     const filter = vi.fn((item, queryText, itemText) => itemText.startsWith(queryText))
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, filter } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, filter } })
 
     await search(wrapper, 'H')
 
@@ -320,7 +332,7 @@ describe('search', () => {
   })
 
   it('syncs with the searchText prop', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, searchText: 'c' } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, searchText: 'c' } })
 
     expect(bottomItems(wrapper).map(i => i.text())).toEqual(['CSS'])
 
@@ -332,7 +344,7 @@ describe('search', () => {
 
   it('sets search through the event emitter and unsubscribes on unmount', async () => {
     const eventEmitter = new EventEmitter()
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, eventEmitter } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, eventEmitter } })
 
     eventEmitter.emit('set-search', 'ht')
     await nextTick()
@@ -350,7 +362,7 @@ describe('search', () => {
   })
 
   it('resets search on blur', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await wrapper.trigger('mousedown')
     await search(wrapper, 'p')
@@ -368,7 +380,7 @@ describe('search', () => {
   })
 
   it('removes the selection by backspace on an empty input', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, modelValue: 'JS' },
       slots: { selection: ({ item }) => h('i', item) }
     })
@@ -382,7 +394,7 @@ describe('search', () => {
 
 describe('focus, blur and menu', () => {
   it('opens on click and closes on click outside', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault },
       attachTo: document.body
     })
@@ -413,7 +425,7 @@ describe('focus, blur and menu', () => {
   })
 
   it('focuses when the input gets focus (tab)', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await input(wrapper).trigger('focus')
 
@@ -427,7 +439,7 @@ describe('focus, blur and menu', () => {
 
   it('does not open when disabled or readonly', async () => {
     for (const prop of ['disabled', 'readonly']) {
-      const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, [prop]: true } })
+      const wrapper = await mountSelect({ props: { items: itemsDefault, [prop]: true } })
 
       await wrapper.trigger('mousedown')
       await wrapper.trigger('keydown', { key: 'ArrowDown' })
@@ -441,7 +453,7 @@ describe('focus, blur and menu', () => {
   })
 
   it('does not show the menu while loading', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, loading: true } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, loading: true } })
 
     await wrapper.trigger('mousedown')
     expect(wrapper.vm.hasMenu).toBe(false)
@@ -451,7 +463,7 @@ describe('focus, blur and menu', () => {
   })
 
   it('disables the input with disableSearch', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, disableSearch: true } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, disableSearch: true } })
 
     expect(input(wrapper).element.disabled).toBe(true)
     expect(wrapper.attributes('tabindex')).toBe('0')
@@ -465,7 +477,7 @@ describe('focus, blur and menu', () => {
   it('selects the text on focus with selectTextOnFocus', async () => {
     vi.useFakeTimers()
 
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, modelValue: 'HTML', selectTextOnFocus: true },
       attachTo: document.body
     })
@@ -483,38 +495,51 @@ describe('focus, blur and menu', () => {
   })
 
   it('uses the default menu position', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, menuDefaultPosition: MENU_POSITIONS.TOP }
     })
 
     await wrapper.trigger('mousedown')
+    await nextTick()
 
     expect(wrapper.find('.IZ-select__menu--at-top').element.style.visibility).toBe('visible')
-    expect(bottomMenu(wrapper).element.style.visibility).toBe('hidden')
+    expect(bottomMenu(wrapper).exists()).toBe(false)
   })
 
   it('moves the menu to the top when there is no space below', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
-    bottomMenu(wrapper).element.getBoundingClientRect = () => ({ top: 500, bottom: window.innerHeight + 100 })
+    // the input is near the bottom of the window and the menu is 300px high
+    wrapper.find('.IZ-select__input').element.getBoundingClientRect = () => ({
+      top: window.innerHeight - 60, bottom: window.innerHeight - 20, left: 0, width: 200
+    })
+    Object.defineProperty(wrapper.find('.IZ-select__menu').element, 'offsetHeight', { value: 300 })
 
     await wrapper.trigger('mousedown')
     await nextTick()
     await nextTick()
 
     expect(wrapper.vm.menuCurrentPosition).toBe(MENU_POSITIONS.TOP)
+    expect(wrapper.find('.IZ-select__menu--at-top').exists()).toBe(true)
   })
 
-  it('removes window listeners on unmount', () => {
+  it('removes window listeners on unmount', async () => {
     const add = vi.spyOn(window, 'addEventListener')
     const remove = vi.spyOn(window, 'removeEventListener')
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
+    expect(add.mock.calls.map(c => c[0])).toEqual(['mousedown'])
+
+    // scroll and resize are only listened to while the menu is open
+    await wrapper.trigger('mousedown')
     expect(add.mock.calls.map(c => c[0]).sort()).toEqual(['mousedown', 'resize', 'scroll'])
+
+    await wrapper.trigger('keydown', { key: 'Escape' })
+    expect(remove.mock.calls.map(c => c[0]).sort()).toEqual(['resize', 'scroll'])
 
     wrapper.unmount()
 
-    expect(remove.mock.calls.map(c => c[0]).sort()).toEqual(['mousedown', 'resize', 'scroll'])
+    expect(remove.mock.calls.map(c => c[0])).toContain('mousedown')
 
     add.mockRestore()
     remove.mockRestore()
@@ -523,12 +548,13 @@ describe('focus, blur and menu', () => {
 
 describe('keyboard', () => {
   it('highlights by arrows and selects by enter', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await wrapper.trigger('keydown', { key: 'ArrowDown' })
 
     expect(wrapper.vm.hasMenu).toBe(true)
-    expect(bottomItems(wrapper)[0].classes()).toContain('IZ-select__item--selected')
+    expect(bottomItems(wrapper)[0].classes()).toContain('IZ-select__item--highlighted')
+    expect(bottomItems(wrapper)[0].classes()).not.toContain('IZ-select__item--selected')
     // only highlighted, not selected yet
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
 
@@ -542,7 +568,7 @@ describe('keyboard', () => {
   })
 
   it('jumps to the opposite side', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await wrapper.trigger('keydown', { key: 'ArrowUp' })
     expect(wrapper.vm.selectedItemByArrows).toBe('HTML')
@@ -552,7 +578,7 @@ describe('keyboard', () => {
   })
 
   it('starts from the selected item', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, modelValue: 'PHP' } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, modelValue: 'PHP' } })
 
     await wrapper.trigger('keydown', { key: 'ArrowDown' })
 
@@ -560,7 +586,7 @@ describe('keyboard', () => {
   })
 
   it('selects instantly without arrowsDisableInstantSelection', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, arrowsDisableInstantSelection: false }
     })
 
@@ -573,7 +599,7 @@ describe('keyboard', () => {
   })
 
   it('selects the first found item by enter', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await wrapper.trigger('mousedown')
     await search(wrapper, 'c')
@@ -585,7 +611,7 @@ describe('keyboard', () => {
   })
 
   it('does not select the first item by enter with disableFirstItemSelectOnEnter', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: itemsDefault, disableFirstItemSelectOnEnter: true }
     })
 
@@ -598,7 +624,7 @@ describe('keyboard', () => {
   })
 
   it('keeps the current selection when enter only toggles the menu', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault, modelValue: 'CSS' } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault, modelValue: 'CSS' } })
 
     await wrapper.trigger('mousedown')
     await wrapper.trigger('keydown', { key: 'Enter' })
@@ -612,7 +638,7 @@ describe('keyboard', () => {
   })
 
   it('emits keydown and keyup, except for special keys on keydown', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: itemsDefault } })
+    const wrapper = await mountSelect({ props: { items: itemsDefault } })
 
     await input(wrapper).trigger('keydown', { key: 'a' })
     await input(wrapper).trigger('keydown', { key: 'Enter' })
@@ -625,14 +651,13 @@ describe('keyboard', () => {
 
 describe('scroll', () => {
   const manyItems = Array.from({ length: 100 }, (_, i) => 'Item ' + i)
-  const visibleCount = wrapper => bottomItems(wrapper).filter(i => i.element.style.display !== 'none').length
+  const visibleCount = wrapper => bottomItems(wrapper).length
 
   it('limits displayed items and shows more on scroll', async () => {
-    const wrapper = mount(Vue3CoolSelect, {
+    const wrapper = await mountSelect({
       props: { items: manyItems, scrollItemsLimit: 10, scrollItemsLimitAddAfterScroll: 5 }
     })
 
-    expect(bottomItems(wrapper)).toHaveLength(100)
     expect(visibleCount(wrapper)).toBe(10)
 
     await bottomMenu(wrapper).find('.IZ-select__menu-items').trigger('scroll')
@@ -642,7 +667,7 @@ describe('scroll', () => {
   })
 
   it('shows items up to the one reached by arrows', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { items: manyItems, scrollItemsLimit: 10 } })
+    const wrapper = await mountSelect({ props: { items: manyItems, scrollItemsLimit: 10 } })
 
     // "up" from the start jumps to the last item
     await wrapper.trigger('keydown', { key: 'ArrowUp' })
@@ -653,7 +678,7 @@ describe('scroll', () => {
 
 describe('simpleInput', () => {
   it('works as a plain input without a menu', async () => {
-    const wrapper = mount(Vue3CoolSelect, { props: { simpleInput: true, modelValue: 'abc' } })
+    const wrapper = await mountSelect({ props: { simpleInput: true, modelValue: 'abc' } })
 
     expect(wrapper.find('.IZ-select__menu').exists()).toBe(false)
     expect(input(wrapper).element.value).toBe('abc')

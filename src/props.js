@@ -13,10 +13,14 @@ export default {
     note: 'array of suggestions (data fetched from backend, etc).'
   },
   itemText: {
+    type: [String, Array, Function],
+    default: null,
+    note: 'property in item for text. An array of properties joins them with "textSeparator", a function gets the item and returns the text.'
+  },
+  textSeparator: {
     type: String,
-    default: null, // 'text',
-    // required: true,
-    note: 'property in item for text.'
+    default: ' - ',
+    note: 'separator for the text when "itemText" is an array of properties.'
   },
   itemValue: {
     type: String,
@@ -164,5 +168,90 @@ export default {
     type: Boolean,
     default: false,
     note: 'works as simple input (no menu)'
+  },
+  multiple: {
+    type: Boolean,
+    default: false,
+    note: 'multiple selection, "v-model" is an array of values.'
+  },
+  taggable: {
+    type: Boolean,
+    default: false,
+    note: 'the typed text can be added as a new value (by enter or by click on the "create" row).'
+  },
+  clearable: {
+    type: Boolean,
+    default: false,
+    note: 'shows a button which removes the selection.'
+  },
+  clearOnSearch: {
+    type: Boolean,
+    default: true,
+    note: 'single selection: typing a search removes the selected item. With false the item stays selected until another one is chosen.'
+  },
+  closeOnSelect: {
+    type: Boolean,
+    default: undefined,
+    note: 'close the menu after an item is selected. By default true for single and false for multiple selection.'
+  },
+  itemChildren: {
+    type: String,
+    default: null,
+    note: 'property in item with child items. Such an item is displayed as a group label.'
+  },
+  itemDisabled: {
+    type: [String, Function],
+    default: null,
+    note: 'property in item (or a function which gets the item) telling that the item cannot be selected.'
+  },
+  selectedItem: {
+    type: null, // an item or an array of items
+    default: null,
+    note: 'item (or items) for the value of "v-model" when it is not in "items", e.g. a saved value with remote search.'
+  },
+  searchUrl: {
+    type: String,
+    default: null,
+    note: 'URL for remote search. Request: "?q=text&page=1", response: { results: [], pagination: { more: true } }.'
+  },
+  searchParams: {
+    type: Object,
+    default: () => ({}),
+    note: 'additional query parameters for remote search.'
+  },
+  searchDelay: {
+    type: Number,
+    default: 250,
+    note: 'delay in ms between typing and the request of remote search.'
+  },
+  minSearchLength: {
+    type: Number,
+    default: 0,
+    note: 'minimal length of the search text for remote search. With 0 the first page is loaded when the menu opens.'
+  },
+  searchRequest: {
+    type: Function,
+    default: null,
+    note: 'own request for remote search: (text, page, params, signal) => Promise of { results, more }.'
+  },
+  name: {
+    type: String,
+    default: null,
+    note: 'name of hidden inputs with the value, to submit the select with a form. Multiple selection adds "[]".'
+  },
+  id: {
+    type: String,
+    default: null,
+    note: '"id" attribute of the input element, e.g. for a label.'
+  },
+  required: {
+    type: Boolean,
+    default: false,
+    note: 'the form cannot be submitted while nothing is selected.'
+  },
+  menuTo: {
+    type: [String, Object],
+    default: null,
+    note: 'renders the menu inside this element (CSS selector or element, e.g. "body"), so a parent with "overflow: hidden" or a modal cannot clip it.'
   }
 }

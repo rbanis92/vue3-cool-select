@@ -11,6 +11,12 @@ export const MENU_POSITIONS = {
 
 export const DEFAULT_OPTIONS = {
   text: {
-    noData: 'No data available'
+    noData: 'No data available',
+    loading: 'Loading…',
+    loadingMore: 'Loading more…',
+    typeToSearch: 'Type to search',
+    create: 'Add',
+    clear: 'Clear',
+    remove: 'Remove'
   }
 }
