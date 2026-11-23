@@ -1,0 +1,101 @@
+// Tailwind CSS theme: the look of a Tailwind form control (rounded-md, gray-300 border, ring on focus).
+// The values are the theme variables of Tailwind 4 with the default of Tailwind as the fallback:
+// in a Tailwind 4 project the select follows the theme of the project, in Tailwind 3 (or without
+// Tailwind) it has the default palette. The file is plain CSS, the Tailwind build is not needed.
+// Every value can be changed by setting the custom property on .IZ-select and .IZ-select__menu.
+@import "../common/main.styl"
+
+.IZ-select,
+.IZ-select__menu
+  // the brand color: focus border and ring, spinner, selected item
+  --iz-accent: var(--color-blue-600, #2563eb)
+
+  --iz-font-family: inherit
+  --iz-font-size: 1rem
+  --iz-font-weight: 400
+  --iz-line-height: 1.5
+
+  // in rem (not em), so the value is the same wherever it is used
+  --iz-height: 2.5rem
+  --iz-padding-x: .75rem
+  --iz-color: var(--color-gray-900, #111827)
+  --iz-placeholder-color: var(--color-gray-400, #9ca3af)
+  --iz-muted-color: var(--color-gray-500, #6b7280)
+  --iz-bg: var(--color-white, #fff)
+  --iz-border-width: 1px
+  --iz-border-color: var(--color-gray-300, #d1d5db)
+  --iz-radius: var(--radius-md, .375rem)
+  --iz-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05)
+  --iz-transition: border-color .15s cubic-bezier(.4, 0, .2, 1), box-shadow .15s cubic-bezier(.4, 0, .2, 1)
+
+  --iz-focus-border-color: var(--iz-accent)
+  --iz-focus-shadow: 0 0 0 1px var(--iz-accent)
+  --iz-error-color: var(--color-red-600, #dc2626)
+  --iz-error-focus-shadow: 0 0 0 1px var(--color-red-600, #dc2626)
+  --iz-error-font-size: .875em
+  --iz-error-margin: .25rem
+  --iz-error-padding: 0
+  --iz-success-color: var(--color-green-600, #16a34a)
+  --iz-success-focus-shadow: 0 0 0 1px var(--color-green-600, #16a34a)
+
+  --iz-disabled-bg: var(--color-gray-50, #f9fafb)
+  --iz-disabled-color: var(--color-gray-500, #6b7280)
+  --iz-disabled-placeholder-color: var(--color-gray-400, #9ca3af)
+  --iz-disabled-shadow: none
+  --iz-readonly-bg: var(--color-gray-50, #f9fafb)
+
+  --iz-icon-color: var(--color-gray-400, #9ca3af)
+  --iz-icon-hover-color: var(--color-gray-700, #374151)
+  --iz-icon-hover-bg: var(--color-gray-100, #f3f4f6)
+  --iz-spinner-color: var(--iz-accent)
+  --iz-spinner-track-color: var(--color-gray-200, #e5e7eb)
+
+  --iz-chip-gap: 6px
+  --iz-chip-padding-x: .5em
+  --iz-chip-font-size: .875em
+  --iz-chip-color: var(--color-gray-700, #374151)
+  --iz-chip-bg: var(--color-gray-100, #f3f4f6)
+  --iz-chip-border: 1px solid var(--color-gray-200, #e5e7eb)
+  --iz-chip-radius: var(--radius-sm, .25rem)
+
+  --iz-menu-z-index: 1060
+  --iz-menu-offset: .25rem
+  --iz-menu-padding: .25rem
+  --iz-menu-bg: var(--color-white, #fff)
+  --iz-menu-border: 1px solid var(--color-gray-200, #e5e7eb)
+  --iz-menu-radius: var(--radius-md, .375rem)
+  --iz-menu-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -4px rgba(0, 0, 0, .1)
+
+  --iz-item-padding-y: .5rem
+  --iz-item-padding-x: .75rem
+  --iz-item-color: var(--color-gray-900, #111827)
+  --iz-item-hover-bg: var(--color-gray-50, #f9fafb)
+  --iz-item-highlight-bg: var(--color-gray-100, #f3f4f6)
+  --iz-item-selected-color: var(--iz-accent)
+  --iz-item-selected-bg: var(--color-blue-50, #eff6ff)
+  --iz-item-disabled-color: var(--color-gray-400, #9ca3af)
+
+  --iz-group-padding: .5rem .75rem .25rem
+  --iz-group-font-size: .75em
+  --iz-group-font-weight: 600
+  --iz-group-color: var(--color-gray-500, #6b7280)
+
+.IZ-select--sm,
+.IZ-select__menu--sm
+  --iz-font-size: .875rem
+  --iz-height: 2rem
+  --iz-padding-x: .625rem
+  --iz-chip-gap: 4px
+  --iz-item-padding-y: .375rem
+  --iz-item-padding-x: .625rem
+  --iz-group-padding: .375rem .625rem .125rem
+
+.IZ-select--lg,
+.IZ-select__menu--lg
+  --iz-font-size: 1.125rem
+  --iz-height: 3rem
+  --iz-padding-x: 1rem
+  --iz-chip-gap: 8px
+  --iz-item-padding-y: .625rem
+  --iz-item-padding-x: 1rem
+  --iz-group-padding: .625rem 1rem .25rem

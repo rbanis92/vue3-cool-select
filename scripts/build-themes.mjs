@@ -7,7 +7,7 @@ import stylus from 'stylus'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const themesDir = join(root, 'src/styles/themes')
 const outDir = join(root, 'dist/themes')
-const themes = ['bootstrap', 'material-design']
+const themes = ['bootstrap', 'material-design', 'tailwind']
 
 await mkdir(outDir, { recursive: true })
 

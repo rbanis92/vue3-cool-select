@@ -1,7 +1,7 @@
 # vue3-cool-select
 
-Vue 3 select with autocomplete, multiple selection, tags, groups, remote search, 19 slots and two themes
-(Bootstrap, Material Design). No dependencies.
+Vue 3 select with autocomplete, multiple selection, tags, groups, remote search, 19 slots and three themes
+(Bootstrap, Material Design, Tailwind CSS). No dependencies.
 
 It started as a Vue 3 port of [vue-cool-select](https://github.com/iliyaZelenko/vue-cool-select) by Ilya Zelenko
 and keeps its props, slots, events and CSS class names.
@@ -17,7 +17,7 @@ and keeps its props, slots, events and CSS class names.
 - clear button, validation states (error, success), disabled and readonly
 - `name` and `required` for plain HTML forms
 - small and large sizes
-- two themes built on CSS custom properties, or write your own
+- three themes built on CSS custom properties, or write your own
 - the menu opens upwards when there is no space below, and can be rendered in `body` to escape modals
 - TypeScript declarations
 
@@ -38,6 +38,7 @@ import { CoolSelectPlugin } from 'vue3-cool-select'
 // import one theme (or your own)
 import 'vue3-cool-select/themes/bootstrap.css'
 // import 'vue3-cool-select/themes/material-design.css'
+// import 'vue3-cool-select/themes/tailwind.css'
 
 createApp(App)
   .use(CoolSelectPlugin, {
@@ -278,9 +279,31 @@ Slots.
 
 ## Themes and styling
 
-The compiled themes are `vue3-cool-select/themes/bootstrap.css` and
-`vue3-cool-select/themes/material-design.css` (also available as `vue3-cool-select/dist/themes/*.css`).
+The compiled themes are `vue3-cool-select/themes/bootstrap.css`, `vue3-cool-select/themes/material-design.css`
+and `vue3-cool-select/themes/tailwind.css` (also available as `vue3-cool-select/dist/themes/*.css`).
 The Bootstrap theme has the exact measures of Bootstrap 4 `.form-control` in all sizes and states.
+
+### Tailwind CSS
+
+```js
+import 'vue3-cool-select/themes/tailwind.css'
+```
+
+The Tailwind theme is plain CSS, so it needs no plugin and no changes in the Tailwind config. Its values are the
+theme variables of Tailwind 4 (`--color-gray-300`, `--radius-md`, ...) with the defaults of Tailwind as fallbacks:
+in a Tailwind 4 project the select follows the colors and radii of your `@theme`, in Tailwind 3 it has the
+default palette. The brand color (focus border and ring, spinner, selected item) is one property:
+
+```css
+.IZ-select,
+.IZ-select__menu {
+  --iz-accent: var(--color-indigo-600, #4f46e5);
+}
+```
+
+With Tailwind 4 import the theme after Tailwind, or put it in a layer, if you want to override it with utilities.
+
+### Custom properties
 
 Every value of a theme is a CSS custom property, so small changes need no overriding of selectors:
 
@@ -296,7 +319,7 @@ Every value of a theme is a CSS custom property, so small changes need no overri
 ```
 
 The full list of properties is at the top of `src/styles/themes/bootstrap.styl`. To write a theme from scratch,
-import `src/styles/common/main.styl` and set the properties (see the two theme files, each is one list of values).
+import `src/styles/common/main.styl` and set the properties (see the theme files, each is one list of values).
 
 ## EventEmitter
 

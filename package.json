@@ -1,7 +1,7 @@
 {
   "name": "vue3-cool-select",
-  "version": "2.0.0",
-  "description": "Vue 3 select with autocomplete, multiple selection, tags, groups, remote search, slots and two themes (Bootstrap, Material Design).",
+  "version": "2.1.0",
+  "description": "Vue 3 select with autocomplete, multiple selection, tags, groups, remote search, slots and three themes (Bootstrap, Material Design, Tailwind CSS).",
   "keywords": [
     "vue",
     "vue3",
@@ -12,6 +12,8 @@
     "slots",
     "bootstrap",
     "material design",
+    "tailwind",
+    "tailwindcss",
     "multiple",
     "multiselect",
     "tags",

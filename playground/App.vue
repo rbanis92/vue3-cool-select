@@ -25,6 +25,9 @@
           <option value="material-design">
             Material Design
           </option>
+          <option value="tailwind">
+            Tailwind
+          </option>
         </select>
       </div>
     </header>
@@ -41,10 +44,11 @@
 import { ref, watchEffect } from 'vue'
 import bootstrapCss from '../src/styles/themes/bootstrap.styl?inline'
 import materialCss from '../src/styles/themes/material-design.styl?inline'
+import tailwindCss from '../src/styles/themes/tailwind.styl?inline'
 import Examples from './Examples.vue'
 import States from './States.vue'
 
-const themes = { bootstrap: bootstrapCss, 'material-design': materialCss }
+const themes = { bootstrap: bootstrapCss, 'material-design': materialCss, tailwind: tailwindCss }
 const params = new URLSearchParams(location.search)
 const theme = ref(params.get('theme') || 'bootstrap')
 const page = ref(params.get('page') || 'examples')

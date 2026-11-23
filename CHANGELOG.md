@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+New:
+
+- Tailwind CSS theme (`vue3-cool-select/themes/tailwind.css`). Plain CSS, no plugin or config needed. It reads
+  the theme variables of Tailwind 4 and falls back to the default palette of Tailwind; `--iz-accent` sets the
+  brand color.
+
 ## 2.0.0
 
 New:
